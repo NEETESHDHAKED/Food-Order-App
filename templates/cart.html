@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head><title>Cart</title></head>
+<body style="font-family:Arial;background:#fff3e0;padding:20px;text-align:center">
+
+<h1>🛒 Tera Cart</h1>
+{% for i in items %}
+<p style="background:white;padding:10px;border-radius:10px">🍽️ {{ i['name'] }} - ₹{{ i['price'] }}</p>
+{% endfor %}
+
+<h2>Total - ₹{{ total }}</h2>
+
+<hr>
+
+<h3>💸 Payment - UPI Se Kar</h3>
+<p>UPI ID - <b>food@paytm</b></p>
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=food@paytm&pn=Food&am={{ total }}" width="200">
+<p>Scan QR and Make Payment</p>
+
+<form action="/order" method="post">
+<input name="name" placeholder="Tera naam" required style="padding:10px;width:80%;margin:5px;border-radius:10px">
+<br>
+<input name="upi" placeholder="Enter 12 Digit UPI Transaction ID " required style="padding:10px;width:80%;margin:5px;border-radius:10px">
+<br>
+<button style="background:green;color:white;padding:12px 25px;border:none;border-radius:10px;font-size:16px;margin-top:10px">✅PAYMENT</button>
+</form>
+
+<br>
+<a href="/">⬅️ Wapas Menu Pe</a>
+
+</body>
+</html>

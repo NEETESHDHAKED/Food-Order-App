@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><title>Admin</title></head>
+<body style="background:#f5f5f5;font-family:Arial;padding:20px">
+<h1>👑 Admin - BEST ONE</h1>
+{% for o in orders %}
+<div style="background:white;padding:15px;margin:10px;border-radius:15px;box-shadow:0 0 10px #ddd">
+<p><b>{{ o['name'] }}</b> - ₹{{ o['total'] }}</p>
+<p>UPI ID - <b>{{ o['upi'] }}</b></p>
+<p>Status - <b>{{ o['status'] }}</b></p>
+<p>Items - {{ o['items']|length }} item</p>
+<a href="/approve/{{ loop.index0 }}" style="background:green;color:white;padding:8px 15px;border-radius:10px;text-decoration:none">✅ PAISA AAYA - APPROVE</a>
+<a href="/delete/{{ loop.index0 }}" style="background:red;color:white;padding:8px 15px;border-radius:10px;text-decoration:none">❌ DELETE</a>
+</div>
+{% endfor %}
+<br><a href="/">Menu Pe Wapas</a>
+</body>
+</html>

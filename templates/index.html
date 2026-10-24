@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Apna Zomato - Food</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body style="font-family:Arial;background:#fff3e0;margin:0;padding:0">
+
+<!-- TOP BAR - EK DUM ZOMATO JAISE -->
+<div style="background:#ff5722;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;color:white;flex-wrap:wrap">
+<div>
+<h1 style="margin:0;font-size:26px">🍕 FOOD ORDER 🔥</h1>
+<p style="margin:2px 0;font-size:14px">📍 Chomu, Jaipur, Rajasthan - 303702</p>
+<p style="margin:2px 0;font-size:13px">⏰ Open - 10 AM to 10 PM - Free Delivery in Chomu</p>
+</div>
+<div style="display:flex;gap:10px">
+<a href="/cart" style="background:white;color:#ff5722;padding:10px 18px;border-radius:20px;text-decoration:none;font-weight:bold">🛒 Cart - {{ session.get('cart',[])|length }} item</a>
+<a href="/admin" style="background:black;color:white;padding:10px 18px;border-radius:20px;text-decoration:none;font-weight:bold">👑 Admin</a>
+</div>
+</div>
+
+<!-- SEARCH JAISE -->
+<div style="text-align:center;padding:20px">
+<h2 style="margin:0">Kya Khayega Aaj? 😋</h2>
+<p style="color:grey">Chomu ka sabse sasta aur tasty khana</p>
+</div>
+
+<!-- MENU -->
+<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:15px;padding:0 15px 30px">
+{% for m in menu %}
+<div style="background:white;width:260px;padding:15px;border-radius:20px;box-shadow:0 4px 10px #ddd;text-align:center">
+<img src="{{ m['img'] }}" width="230" height="150" style="border-radius:15px;object-fit:cover" onerror="this.src='https://cdn.pixabay.com/photo/2017/05/11/19/44/fresh-fruits-2305192_640.jpg'">
+<h3 style="margin:10px 0 5px">{{ m['name'] }}</h3>
+<p style="color:grey;font-size:13px">📍 Chomu Special - ⭐ 4.8 - 30 min</p>
+<p style="font-size:18px;font-weight:bold;color:green">₹{{ m['price'] }}</p>
+<a href="/add/{{ m['id'] }}" style="background:#ff5722;color:white;padding:10px 25px;border-radius:10px;text-decoration:none;font-weight:bold;display:inline-block">ADD + 🛒</a>
+</div>
+{% endfor %}
+</div>
+
+<!-- FOOTER -->
+<div style="background:black;color:white;text-align:center;padding:15px">
+<p>📍 Address - Main Market, Chomu, Jaipur - 303702</p>
+<p>📞 Call - 9876543210 | Made By - Neetesh ❤️</p>
+</div>
+
+</body>
+</html>
