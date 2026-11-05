@@ -49,7 +49,24 @@ def order():
 def admin():
     if not session.get('is_admin'):
         return redirect('/login')
-    return render_template('admin.html')
+    return render_template('admin.html',orders=orders)
+
+
+@app.route('/admin-login', methods=['GET','POST'])
+def admin_login():
+    if request.method == 'POST':
+        if request.form.get('password') == 'admin123':
+            session['is_admin'] = True
+            return redirect('/admin')
+        else:
+            return "Galat Password!"
+    return '''
+    <h2>Admin Login</h2>
+    <form method="POST">
+        Password: <input type="password" name="password">
+        <button>Login</button>
+    </form>
+    '''
 
 # YE WALA HI APPROVE HAI - YE NAHI HOGA TOH BUTTON KAAM NAHI KAREGA
 @app.route('/approve/<int:index>')
