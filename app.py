@@ -47,7 +47,9 @@ def order():
 
 @app.route('/admin')
 def admin():
-    return render_template('admin.html', orders=orders)
+    if not session.get('is_admin'):
+        return redirect('/login')
+    return render_template('admin.html')
 
 # YE WALA HI APPROVE HAI - YE NAHI HOGA TOH BUTTON KAAM NAHI KAREGA
 @app.route('/approve/<int:index>')
