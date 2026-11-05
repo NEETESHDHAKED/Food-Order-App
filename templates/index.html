@@ -1,33 +1,19 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Best One Food</title>
-<link rel="stylesheet" href="/static/style.css">
-<style>
-.card{display:inline-block; border:1px solid #ddd; border-radius:12px; padding:10px; margin:8px; text-align:center; width:140px}
-.card img{width:120px; height:90px; object-fit:cover; border-radius:10px}
-</style>
-</head>
-<body>
-<h1>🍔 Best One Food 🍲</h1>
-<form action="/order" method="POST">
-  <label>Naam:</label><br>
-  <input type="text" name="name" placeholder="Mudit" required><br><br>
-  <label>UPI ID:</label><br>
-  <input type="text" name="upi" placeholder="mudit@ok" required><br><br>
-
-  <h2>🍔 Fast Food</h2>
-  <div class="card"><img src="/static/pizza.jpg"><br><b>Pizza - ₹199</b><br><input type="checkbox" name="items" value="Pizza"> Select</div>
-  <div class="card"><img src="/static/burger.jpg"><br><b>Burger - ₹99</b><br><input type="checkbox" name="items" value="Burger"> Select</div>
-  <div class="card"><img src="/static/maggie.jpg"><br><b>Maggie - ₹49</b><br><input type="checkbox" name="items" value="Maggie"> Select</div>
-  <div class="card"><img src="/static/coffee.jpg"><br><b>Coffee - ₹39</b><br><input type="checkbox" name="items" value="Coffee"> Select</div>
-
-  <h2>🍲 Daily Food</h2>
-  <div class="card"><img src="/static/dalbati.jpg"><br><b>Dal Bati - ₹129</b><br><input type="checkbox" name="items" value="Dal Bati"> Select</div>
-  <div class="card"><img src="/static/paneer.jpg"><br><b>Paneer - ₹149</b><br><input type="checkbox" name="items" value="Paneer"> Select</div>
-
-  <br><br>
-  <button type="submit" style="padding:12px 25px; font-size:18px;">Order Karo</button>
-</form>
-</body>
-</html>
+<!DOCTYPE html><html><body>
+<h1>🍔 Best One Food</h1>
+{% if user %} <p>Hi {{ user }} | <a href="/cart">🛒 Cart</a> | <a href="/history">Order History</a> | <a href="/logout">Logout</a></p>
+{% else %} <p><a href="/login">Login</a> | <a href="/register">Register</a> | <a href="/admin-login">Admin</a></p> {% endif %}
+<hr>
+<h2>🍔 Fast Food</h2>
+{% for it in items if it.category=='Fast Food' %}
+<div style="display:inline-block; border:1px solid #ddd; padding:10px; margin:8px; text-align:center; width:150px; border-radius:12px;">
+<img src="{{ it.photo }}" width="130" height="90" style="object-fit:cover; border-radius:10px;"><br><b>{{ it.name }}</b><br>₹{{ it.price }}<br><a href="/add_to_cart/{{ it.id }}">➕ Add to Cart</a>
+</div>
+{% endfor %}
+<h2>🍲 Daily Food</h2>
+{% for it in items if it.category=='Daily Food' %}
+<div style="display:inline-block; border:1px solid #ddd; padding:10px; margin:8px; text-align:center; width:150px; border-radius:12px;">
+<img src="{{ it.photo }}" width="130" height="90" style="object-fit:cover; border-radius:10px;"><br><b>{{ it.name }}</b><br>₹{{ it.price }}<br><a href="/add_to_cart/{{ it.id }}">➕ Add to Cart</a>
+</div>
+{% endfor %}
+<br><br><a href="/cart">🛒 Cart Dekho ({{ cart|length }})</a>
+</body></html>
