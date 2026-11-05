@@ -1,1 +1,13 @@
-<h2>Login</h2><form method="POST">Username: <input name="username" required><br>Password: <input type="password" name="password" required><br><button>Login</button></form><p>Naya hai? <a href="/register">Register Karo</a></p>
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<h1>Login 🔑</h1>
+<div class="box">
+  <form method="POST">
+    Username:<br><input name="username" required>
+    Password:<br><input type="password" name="password" required>
+    <button style="width:100%;">Login</button>
+  </form>
+  <p style="text-align:center; margin-top:12px;">Naya hai? <a href="/register">Register Karo</a></p>
+</div>
+{% endblock %}
