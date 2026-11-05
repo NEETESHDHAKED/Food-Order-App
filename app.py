@@ -1,56 +1,23 @@
 from flask import Flask, render_template, request, redirect, session
 
 app = Flask(__name__)
-app.secret_key = "food123"
-
-menu = [
-    {"id": 1, "name": "Dal Bati Churma", "price": 120, "img": "/static/dalbati.jpg"},
-    {"id": 2, "name": "Pizza Cheese Burst", "price": 199, "img": "/static/pizza.jpg"},
-    {"id": 3, "name": "Burger Combo", "price": 99, "img": "/static/burger.jpg"},
-    {"id": 4, "name": "Paneer Butter Masala", "price": 150, "img": "/static/paneer.jpg"},
-    {"id": 5, "name": "Maggie Masala", "price": 60, "img": "/static/maggie.jpg"},
-    {"id": 6, "name": "Cold Coffee", "price": 80, "img": "/static/coffee.jpg"},
-]
+app.secret_key = "best-one-secret"
 
 orders = []
 
 @app.route('/')
 def home():
-    return render_template('index.html', menu=menu)
-
-@app.route('/add/<int:id>')
-def add(id):
-    cart = session.get('cart', [])
-    cart.append(id)
-    session['cart'] = cart
-    return redirect('/')
-
-@app.route('/cart')
-def cart():
-    cart = session.get('cart', [])
-    items = [m for m in menu if m['id'] in cart]
-    total = sum(i['price'] for i in items)
-    return render_template('cart.html', items=items, total=total)
+    return render_template('index.html')
 
 @app.route('/order', methods=['POST'])
 def order():
-    name = request.form['name']
-    upi = request.form['upi']
-    if len(upi) < 12 or not upi.isdigit():
-        return "<h1>❌ 12 Digit daal - 123 se nahi chalega</h1><a href='/cart'>Wapas</a>"
-    cart = session.get('cart', [])
-    items = [m for m in menu if m['id'] in cart]
-    total = sum(i['price'] for i in items)
-    orders.append({"name": name, "items": items, "total": total, "upi": upi, "status": "PENDING"})
-    session['cart'] = []
-    return render_template('order.html', name=name, total=total)
+    name = request.form.get('name')
+    upi = request.form.get('upi')
+    total = request.form.get('total')
+    orders.append({'name': name, 'upi': upi, 'total': total, 'status': 'Pending', 'items': []})
+    return render_template('order.html', name=name)
 
-@app.route('/admin')
-def admin():
-    if not session.get('is_admin'):
-        return redirect('/login')
-    return render_template('admin.html',orders=orders)
-
+# --- ADMIN PART ---
 
 @app.route('/admin-login', methods=['GET','POST'])
 def admin_login():
@@ -59,7 +26,7 @@ def admin_login():
             session['is_admin'] = True
             return redirect('/admin')
         else:
-            return "Galat Password!"
+            return "Galat Password! <a href='/admin-login'>Wapas Jao</a>"
     return '''
     <h2>Admin Login</h2>
     <form method="POST">
@@ -68,17 +35,24 @@ def admin_login():
     </form>
     '''
 
-# YE WALA HI APPROVE HAI - YE NAHI HOGA TOH BUTTON KAAM NAHI KAREGA
-@app.route('/approve/<int:index>')
-def approve(index):
-    print("APPROVE DABAYA - ", index)
-    orders[index]['status'] = "PAID ✅ - Order Bhej Do"
+@app.route('/admin')
+def admin():
+    if not session.get('is_admin'):
+        return redirect('/admin-login')
+    return render_template('admin.html', orders=orders)
+
+@app.route('/approve/<int:i>')
+def approve(i):
+    if not session.get('is_admin'):
+        return redirect('/admin-login')
+    orders[i]['status'] = 'Approved'
     return redirect('/admin')
 
-@app.route('/delete/<int:index>')
-def delete_order(index):
-    if 0 <= index < len(orders):
-        orders.pop(index)
+@app.route('/delete/<int:i>')
+def delete(i):
+    if not session.get('is_admin'):
+        return redirect('/admin-login')
+    orders.pop(i)
     return redirect('/admin')
 
 if __name__ == '__main__':
