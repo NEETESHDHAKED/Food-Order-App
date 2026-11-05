@@ -17,7 +17,9 @@
 <br><br>
 <a href="/" style="background:orange;color:white;padding:12px 25px;border-radius:10px;text-decoration:none;font-size:18px">🍽️ Aur Order Kar</a>
 <br><br>
+{% if session.get('is_admin') %}
 <a href="/admin" style="color:grey">Admin Check Kar</a>
+{% endif %}
 
 </body>
 </html>
