@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, redirect, session, url_for
+from flask import Flask, render_template, request, redirect, session
 
 app = Flask(__name__)
 app.secret_key = "best-one-secret"
 
-# --- DATA ---
+# --- MENU DATA - Tere static wali photos ke hisaab se ---
 FOOD_ITEMS = [
     {'id': 1, 'name': 'Pizza', 'price': 199, 'photo': '/static/pizza.jpg', 'category': 'Fast Food'},
     {'id': 2, 'name': 'Burger', 'price': 99, 'photo': '/static/burger.jpg', 'category': 'Fast Food'},
@@ -13,14 +13,15 @@ FOOD_ITEMS = [
     {'id': 6, 'name': 'Paneer', 'price': 149, 'photo': '/static/paneer.jpg', 'category': 'Daily Food'},
 ]
 
-users = {'mudit': '1234'}  # pehle se 1 user: mudit / 1234
+users = {'mudit': '1234'}  # Pehle se user: mudit / 1234
 orders = []
 next_food_id = 7
 
 # --- HOME / MENU ---
 @app.route('/')
 def home():
-    return render_template('index.html', items=FOOD_ITEMS, cart=session.get('cart', []), user=session.get('user'))
+    # index.html ko chahiye: items, cart
+    return render_template('index.html', items=FOOD_ITEMS, cart=session.get('cart', []))
 
 @app.route('/add_to_cart/<int:fid>')
 def add_to_cart(fid):
@@ -37,14 +38,21 @@ def remove_from_cart(fid):
     session['cart'] = cart
     return redirect('/cart')
 
+# --- CART ---
 @app.route('/cart')
 def cart_page():
+    # cart.html ko chahiye: cart_items, total
     cart_ids = session.get('cart', [])
-    cart_items = [x for x in FOOD_ITEMS if x['id'] in cart_ids]
-    # quantity ke liye count
+    cart_items = []
+    for fid in cart_ids:
+        for it in FOOD_ITEMS:
+            if it['id'] == fid:
+                cart_items.append(it)
+                break
     total = sum([x['price'] for x in cart_items])
-    return render_template('cart.html', cart_items=cart_items, total=total, user=session.get('user'))
+    return render_template('cart.html', cart_items=cart_items, total=total)
 
+# --- CHECKOUT ---
 @app.route('/checkout', methods=['GET','POST'])
 def checkout():
     if not session.get('user'):
@@ -52,13 +60,29 @@ def checkout():
     cart_ids = session.get('cart', [])
     if not cart_ids:
         return redirect('/')
-    cart_items = [x for x in FOOD_ITEMS if x['id'] in cart_ids]
+    cart_items = []
+    for fid in cart_ids:
+        for it in FOOD_ITEMS:
+            if it['id'] == fid:
+                cart_items.append(it)
+                break
     total = sum([x['price'] for x in cart_items])
+
     if request.method == 'POST':
         upi = request.form.get('upi')
-        orders.append({'user': session.get('user'), 'name': session.get('user'), 'upi': upi, 'total': total, 'items': cart_items, 'status': 'Pending'})
+        # order.html ko chahiye: name, items, total
+        orders.append({
+            'user': session.get('user'),
+            'name': session.get('user'),
+            'upi': upi,
+            'total': total,
+            'items': cart_items,
+            'status': 'Pending'
+        })
         session['cart'] = []
         return render_template('order.html', name=session.get('user'), items=cart_items, total=total)
+
+    # checkout.html ko chahiye: cart_items, total
     return render_template('checkout.html', cart_items=cart_items, total=total)
 
 # --- USER LOGIN / REGISTER ---
@@ -92,10 +116,12 @@ def logout():
     session.pop('is_admin', None)
     return redirect('/')
 
+# --- ORDER HISTORY ---
 @app.route('/history')
 def history():
     if not session.get('user'):
         return redirect('/login')
+    # history.html ko chahiye: orders, user
     my_orders = [o for o in orders if o['user'] == session.get('user')]
     return render_template('history.html', orders=my_orders, user=session.get('user'))
 
@@ -114,6 +140,7 @@ def admin_login():
 def admin():
     if not session.get('is_admin'):
         return redirect('/admin-login')
+    # admin.html ko chahiye: items, orders
     return render_template('admin.html', items=FOOD_ITEMS, orders=orders)
 
 @app.route('/admin/add', methods=['POST'])
