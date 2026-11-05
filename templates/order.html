@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html>
-<body>
-<h1>Order Ho Gaya {{ name }}! 🎉</h1>
-<p>Total: ₹{{ total }}</p>
-{% for item in items %}
-  <div style="display:inline-block; text-align:center; margin:5px;">
-    <img src="{{ food_photos.get(item, '') }}" width="80" height="80" style="border-radius:10px; object-fit:cover;"><br>{{ item }}
-  </div>
-{% endfor %}
-<br><br>
-<a href="/">Wapas Jao</a>
-</body>
-</html>
+<h1>Checkout</h1>
+{% for it in cart_items %}<p>{{ it.name }} - ₹{{ it.price }}</p>{% endfor %}
+<h3>Total: ₹{{ total }}</h3>
+<form method="POST">UPI ID: <input name="upi" placeholder="mudit@ok" required><br><br><button>Order Place Karo</button></form>
