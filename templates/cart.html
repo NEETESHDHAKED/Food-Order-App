@@ -1,6 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Tera Cart{% endblock %}
+{% block content %}
 <h1>🛒 Tera Cart</h1>
-{% for it in cart_items %}
-<div><img src="{{ it.photo }}" width="80" height="60" style="border-radius:8px;"> {{ it.name }} - ₹{{ it.price }} <a href="/remove_from_cart/{{ it.id }}">❌ Remove</a></div><br>
-{% endfor %}
-<h3>Total: ₹{{ total }}</h3>
-<a href="/">+ Aur Add Karo</a> | <a href="/checkout">Checkout Karo ➡️</a>
+<div class="box">
+{% if cart_items|length == 0 %}
+  <p style="text-align:center;">Cart khaali hai bhai! 🍽️<br><br><a href="/">+ Kuch Add Karo</a></p>
+{% else %}
+  {% for it in cart_items %}
+  <div style="display:flex; align-items:center; gap:12px; background:#FFF8E1; padding:10px; border-radius:14px; margin-bottom:10px;">
+    <img src="{{ it.photo }}" width="80" height="60" style="border-radius:10px; object-fit:cover;">
+    <b>{{ it.name }}</b> - <span class="price">₹{{ it.price }}</span>
+    <a href="/remove_from_cart/{{ it.id }}" style="margin-left:auto; color:#D32F2F; font-weight:700; text-decoration:none;">❌ Remove</a>
+  </div>
+  {% endfor %}
+  <h3 style="text-align:right;">Total: ₹{{ total }}</h3>
+  <div style="display:flex; gap:10px; margin-top:10px;">
+    <a href="/" style="flex:1; text-align:center; padding:12px; border:2px solid #FF6D00; border-radius:25px; color:#FF6D00; font-weight:800; text-decoration:none;">+ Aur Add Karo</a>
+    <a href="/checkout" style="flex:1; text-align:center;"><button style="width:100%;">Checkout Karo ➡️</button></a>
+  </div>
+{% endif %}
+</div>
+{% endblock %}
