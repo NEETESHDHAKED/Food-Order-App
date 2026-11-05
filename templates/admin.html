@@ -1,36 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head><title>Admin Panel</title></head>
-<body>
-<h1>Admin Panel</h1>
-<a href="/logout">Logout</a>
+<h1>Admin Panel</h1><a href="/logout">Logout</a><hr>
+<h2>➕ Naya Food Add Karo</h2>
+<form action="/admin/add" method="POST">
+Naam: <input name="name" placeholder="Samosa" required>
+Price: <input name="price" type="number" placeholder="30" required>
+Photo: <select name="photo"><option value="/static/pizza.jpg">Pizza Photo</option><option value="/static/burger.jpg">Burger Photo</option><option value="/static/maggie.jpg">Maggie Photo</option><option value="/static/coffee.jpg">Coffee Photo</option><option value="/static/dalbati.jpg">Dal Bati Photo</option><option value="/static/paneer.jpg">Paneer Photo</option></select>
+Category: <select name="category"><option>Fast Food</option><option>Daily Food</option></select>
+<button>Add Karo</button>
+</form>
 <hr>
-{% if orders|length == 0 %}
-<p>Abhi koi order nahi hai.</p>
-{% endif %}
-
+<h2>🍔 Menu - Delete Karo</h2>
+{% for it in items %}<p><img src="{{ it.photo }}" width="50" height="40"> {{ it.name }} - ₹{{ it.price }} ({{ it.category }}) <a href="/admin/delete_food/{{ it.id }}">❌ Delete</a></p>{% endfor %}
+<hr>
+<h2>📦 Orders - History</h2>
 {% for o in orders %}
-  <div style="border:1px solid #ccc; padding:10px; margin:10px; border-radius:10px;">
-    <p><b>{{ o['name'] }} - ₹{{ o['total'] }}</b> | Status: {{ o['status'] }} | UPI: {{ o['upi'] }}</p>
-
-    <p>🍔 Fast Food:</p>
-    {% for item in o['fast_food'] %}
-      <div style="display:inline-block; text-align:center; margin:5px;">
-        <img src="{{ food_photos.get(item, '') }}" width="80" height="80" style="border-radius:10px; object-fit:cover;"><br>{{ item }}
-      </div>
-    {% endfor %}
-
-    <p>🍲 Daily Food:</p>
-    {% for item in o['daily_food'] %}
-      <div style="display:inline-block; text-align:center; margin:5px;">
-        <img src="{{ food_photos.get(item, '') }}" width="80" height="80" style="border-radius:10px; object-fit:cover;"><br>{{ item }}
-      </div>
-    {% endfor %}
-
-    <br>
-    <a href="/approve/{{ loop.index0 }}">✅ Approve</a> |
-    <a href="/delete/{{ loop.index0 }}">❌ Delete</a>
-  </div>
+<div style="border:1px solid #ccc; padding:10px; margin:8px;">
+<b>{{ o['user'] }} - ₹{{ o['total'] }} - {{ o['status'] }} - UPI: {{ o['upi'] }}</b><br>
+{% for it in o['items'] %}<img src="{{ it.photo }}" width="60" height="50" style="border-radius:8px;"> {{ it.name }} {% endfor %}<br>
+<a href="/approve/{{ loop.index0 }}">✅ Approve</a> | <a href="/delete_order/{{ loop.index0 }}">❌ Delete Order</a>
+</div>
 {% endfor %}
-</body>
-</html>
