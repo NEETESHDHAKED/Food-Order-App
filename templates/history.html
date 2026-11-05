@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Order History{% endblock %}
+{% block content %}
+<h1>📦 {{ user }} Ki History</h1>
+<div class="box">
+  {% if orders|length == 0 %}<p>Abhi koi order nahi hai.</p>{% endif %}
+  {% for o in orders %}
+  <div style="border:1px solid #FFE0B2; padding:12px; border-radius:12px; margin-bottom:10px;">
+    <b>₹{{ o['total'] }} - {{ o['status'] }}</b><br><br>
+    {% for it in o['items'] %}<span style="display:inline-block; text-align:center; margin:4px;"><img src="{{ it.photo }}" width="60" height="50" style="border-radius:8px; object-fit:cover;"><br>{{ it.name }}</span>{% endfor %}
+  </div>
+  {% endfor %}
+  <a href="/">⬅️ Home Jao</a>
+</div>
+{% endblock %}
