@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel{% endblock %}
+{% block content %}
+<h1>Admin Panel 👑</h1>
+
+<div class="box">
+  <h2 style="margin-top:0;">➕ Naya Food Add Karo</h2>
+  <form action="/admin/add" method="POST">
+    Naam:<br><input name="name" placeholder="Samosa" required>
+    Price:<br><input name="price" type="number" placeholder="30" required>
+    Photo:<br>
+    <select name="photo">
+      <option value="/static/pizza.jpg">Pizza Photo</option>
+      <option value="/static/burger.jpg">Burger Photo</option>
+      <option value="/static/maggie.jpg">Maggie Photo</option>
+      <option value="/static/coffee.jpg">Coffee Photo</option>
+      <option value="/static/dalbati.jpg">Dal Bati Photo</option>
+      <option value="/static/paneer.jpg">Paneer Photo</option>
+    </select>
+    Category:<br>
+    <select name="category"><option>Fast Food</option><option>Daily Food</option></select>
+    <button style="width:100%;">Add Karo</button>
+  </form>
+</div>
+
+<div class="box" style="margin-top:18px;">
+  <h2 style="margin-top:0;">🍔 Menu - Delete Karo</h2>
+  {% for it in items %}
+  <p style="display:flex; align-items:center; gap:10px;">
+    <img src="{{ it.photo }}" width="50" height="40" style="border-radius:8px; object-fit:cover;">
+    {{ it.name }} - ₹{{ it.price }} ({{ it.category }})
+    <a href="/admin/delete_food/{{ it.id }}" style="margin-left:auto; color:#D32F2F;">❌ Delete</a>
+  </p>
+  {% endfor %}
+</div>
+
+<div class="box" style="margin-top:18px;">
+  <h2 style="margin-top:0;">📦 Orders</h2>
+  {% if orders|length == 0 %}<p>Koi order nahi hai.</p>{% endif %}
+  {% for o in orders %}
+  <div style="border:1px solid #FFE0B2; padding:12px; border-radius:12px; margin-bottom:10px;">
+    <b>{{ o['user'] }} - ₹{{ o['total'] }} - {{ o['status'] }} - UPI: {{ o['upi'] }}</b><br><br>
+    {% for it in o['items'] %}
+      <span style="display:inline-block; text-align:center; margin:4px;"><img src="{{ it.photo }}" width="60" height="50" style="border-radius:8px; object-fit:cover;"><br>{{ it.name }}</span>
+    {% endfor %}<br><br>
+    <a href="/approve/{{ loop.index0 }}">✅ Approve</a> | <a href="/delete_order/{{ loop.index0 }}">❌ Delete Order</a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
