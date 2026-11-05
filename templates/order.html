@@ -1,25 +1,14 @@
 <!DOCTYPE html>
 <html>
-<head><title>Order Done</title></head>
-<body style="font-family:Arial;background:#e8f5e9;text-align:center;padding:40px">
-
-<h1 style="font-size:40px">✅ Order Ho Gaya {{ name }} Bhai!</h1>
-<h2 style="color:green">Total - ₹{{ total }}</h2>
-
-<div style="background:white;padding:20px;border-radius:20px;box-shadow:0 0 15px #ccc;display:inline-block">
-<p style="font-size:20px">🟡 <b>Status - PENDING</b></p>
-<p>Admin abhi tera payment check karega</p>
-<p>12 Digit ID sahi hui toh APPROVE ho jayega</p>
-<p>⏰ 30 min me aa jayega - Garam Garam</p>
-<p>📍 Chomu, Rajasthan - Free Delivery</p>
-</div>
-
+<body>
+<h1>Order Ho Gaya {{ name }}! 🎉</h1>
+<p>Total: ₹{{ total }}</p>
+{% for item in items %}
+  <div style="display:inline-block; text-align:center; margin:5px;">
+    <img src="{{ food_photos.get(item, '') }}" width="80" height="80" style="border-radius:10px; object-fit:cover;"><br>{{ item }}
+  </div>
+{% endfor %}
 <br><br>
-<a href="/" style="background:orange;color:white;padding:12px 25px;border-radius:10px;text-decoration:none;font-size:18px">🍽️ Aur Order Kar</a>
-<br><br>
-{% if session.get('is_admin') %}
-<a href="/admin" style="color:grey">Admin Check Kar</a>
-{% endif %}
-
+<a href="/">Wapas Jao</a>
 </body>
 </html>
